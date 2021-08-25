@@ -2,10 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:persian_datetime_picker/src/date/shamsi_date.dart';
+import 'package:persian_datetime_picker/src/time_utils.dart';
 
 import 'pdate_picker_common.dart';
 import 'pdate_utils.dart' as utils;
@@ -227,7 +230,10 @@ class _InputDatePickerFormFieldState extends State<PInputDatePickerFormField> {
                 hintText: widget.fieldHintText ?? 'mm/dd/yyyy',
                 labelText: widget.fieldLabelText ?? 'Enter Date',
               ),
-              validator: _validateDate,
+              validator: (value){
+                var conDate = convertArabicDate(value);
+                return _validateDate(conDate);
+              },
               // inputFormatters: <TextInputFormatter>[
               //   // TODO(darrenaustin): localize date separator '/'
               //   _DateTextInputFormatter('/'),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'pdate_utils.dart';
+import 'package:intl/intl.dart';
 
 String formatTimeOfDay(TimeOfDay timeOfDay,
     {bool alwaysUse24HourFormat = false}) {
@@ -53,7 +54,36 @@ String _formatTwoDigitZeroPad(int number) {
 
   return '$number';
 }
-
+String convertArabicDate(String? dateStr) {
+  if(dateStr == null) return "";
+  var arrDate = dateStr.split("/");
+  var conDate = List.empty(growable: true);
+  arrDate.forEach((element) {
+    conDate.add(convertArabicNumbersToLatin(element));
+  });
+  return conDate.join("/");
+}
+String? convertArabicNumbersToLatin(String? str,
+    {String? separator = null, String? minesSignPersian = null}) {
+  String minesSignPersian = '\u2212'; //mines sign in arabic and persian languages
+  if (str == null) {
+    return null;
+  }
+  var strChar = str.replaceAll("\u200E", "").characters;
+  var persianFormatter = NumberFormat.compact(locale: "fa");
+  return strChar.map((ch) {
+    if (num.tryParse(ch) != null) {
+      return ch;
+    } else if (separator != null && separator == ch) {
+      return ".";
+    } else if ((minesSignPersian == ch) ||
+        "-" == ch) {
+      return "-";
+    } else {
+      return persianFormatter.parse(ch).toInt().toString();
+    }
+  }).join();
+}
 @override
 String formatMinute(TimeOfDay timeOfDay) {
   final int minute = timeOfDay.minute;
