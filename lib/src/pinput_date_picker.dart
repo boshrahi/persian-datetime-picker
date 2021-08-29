@@ -187,11 +187,12 @@ class _InputDatePickerFormFieldState extends State<PInputDatePickerFormField> {
   }
 
   void _handleSaved(String? text) {
+    var convertDate = convertArabicDate(text);
     if (widget.onDateSaved != null) {
-      final Jalali? date = _parseDate(text!);
+      final Jalali? date = _parseDate(convertDate);
       if (_isValidAcceptableDate(date)) {
         _selectedDate = date;
-        _inputText = text;
+        _inputText = convertDate;
         widget.onDateSaved!(date);
       }
     }
